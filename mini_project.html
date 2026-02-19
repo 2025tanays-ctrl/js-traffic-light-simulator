@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Traffic Light Tanay Shelar</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            height: 100vh; 
+            width: 100vw;
+            overflow: hidden; 
+            font-family: monospace;
+            background: #000;
+            position: relative;
+        }
+
+        .background {
+            position: absolute; width: 100%; height: 100%; z-index: 0;
+            background: url('https://i.pinimg.com/736x/32/c4/e7/32c4e73767960377c0b98183b55dd66b.jpg') center bottom/cover;
+        }
+
+        .overlay {
+            position: absolute; width: 100%; height: 100%; z-index: 1;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6));
+        }
+        
+        .scene {
+            position: absolute; 
+            bottom: 12%; 
+            right: 5%;
+            z-index: 2; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: flex-end;
+            transform: scale(0.6); 
+            transform-origin: bottom center;
+        }
+
+        .traffic-light {
+            background: #1a1a1a; 
+            padding: 15px; 
+            border-radius: 25px; 
+            display: flex; 
+            flex-direction: column; 
+            gap: 15px; 
+            border: 4px solid #000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            position: relative; 
+            z-index: 3; 
+        }
+
+        .light {
+            width: 70px; height: 70px; 
+            border-radius: 50%; 
+            background: #2a2a2a;
+            border-top: 3px solid rgba(0,0,0,0.3); 
+            transition: all 0.2s;
+        }
+
+        .red.active { background: #ff0033; box-shadow: 0 0 35px #ff0033; }
+        .yellow.active { background: #ffcc00; box-shadow: 0 0 35px #ffcc00; }
+        .green.active { background: #00ff66; box-shadow: 0 0 35px #00ff66; }
+
+        .timer-container {
+            margin-top: -20px;
+            padding: 20px 20px 8px 20px; 
+            background: #1a1a1a; 
+            border-radius: 0 0 15px 15px; 
+            border: 4px solid #000;
+            border-top: none; 
+            z-index: 2; 
+            text-align: center;
+            width: 80%;
+        }
+        .timer { font-size: 2rem; font-weight: bold; color: #444; }
+        
+        .timer.red { color: #ff3355; }
+        .timer.yellow { color: #ffdd33; }
+        .timer.green { color: #33ff88; }
+
+        .pole {
+            width: 16px; 
+            height: 180px;
+            background: linear-gradient(90deg, #111, #333, #111);
+            margin-top: -4px; 
+            z-index: 1; 
+            border: 2px solid #000;
+        }
+
+        .base {
+            width: 120px; height: 35px;
+            background: linear-gradient(90deg, #0a0a0a, #2a2a2a, #0a0a0a);
+            border: 2px solid #000; 
+            border-bottom: none;
+            border-radius: 10px 10px 0 0;
+            margin-top: -2px; 
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background"></div>
+    <div class="overlay"></div>
+
+    <div class="scene">
+        <div class="traffic-light">
+            <div class="light red" id="light-red"></div>
+            <div class="light yellow" id="light-yellow"></div>
+            <div class="light green" id="light-green"></div>
+        </div>
+
+        <div class="timer-container">
+            <div class="timer" id="timer-display">00</div>
+        </div>
+
+        <div class="pole"></div>
+
+        <div class="base"></div>
+    </div>
+
+    <script>
+        let currentColor = 'red';
+        let secondsLeft = 10;
+
+        const display = document.getElementById('timer-display');
+        const lights = document.querySelectorAll('.light');
+
+        setInterval(function() {
+            
+            display.innerText = secondsLeft < 10 ? '0' + secondsLeft : secondsLeft;
+            
+            display.className = 'timer ' + currentColor;
+
+            lights.forEach(light => light.classList.remove('active'));
+            document.getElementById('light-' + currentColor).classList.add('active');
+
+            
+            if (secondsLeft === 0) {
+                switch (currentColor) {
+                    case 'red':
+                        currentColor = 'green';
+                        secondsLeft = 10;
+                        break;
+                    case 'green':
+                        currentColor = 'yellow';
+                        secondsLeft = 3;
+                        break;
+                    case 'yellow':
+                        currentColor = 'red';
+                        secondsLeft = 10;
+                        break;
+                }
+            } else {
+                secondsLeft--;
+            }
+
+        }, 1000);
+    </script>
+</body>
+</html>
